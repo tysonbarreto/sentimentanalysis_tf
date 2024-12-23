@@ -3,8 +3,10 @@ from kaggle import api
 from opendatasets.utils.kaggle_direct import get_kaggle_dataset_id, is_kaggle_url
 from opendatasets.utils.archive import extract_archive
 import click
+from dotenv import load_dotenv, find_dotenv
 import json
 
+load_dotenv(find_dotenv())
 
 class Kaggle:
     '''

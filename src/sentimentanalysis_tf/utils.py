@@ -42,5 +42,9 @@ def save_object(file_name:str,object:object):
     pickle.dump(object, open(os.path.join(dir_path,file_name), "wb"))
     logger.info(f"Object saved in {os.path.join(dir_path,file_name)}")
 
+def load_object(file_name:str):
+    with open(file_name, 'rb') as handle:
+        return pickle.load(handle)
+
 if __name__=="__main__":
-    __all__=["show_words_cloud","stem_text","save_object"]
+    __all__=["show_words_cloud","stem_text","save_object","load_object"]

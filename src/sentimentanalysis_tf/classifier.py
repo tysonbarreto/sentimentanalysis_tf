@@ -15,6 +15,7 @@ from keras._tf_keras.keras.preprocessing.text import one_hot
 from keras._tf_keras.keras.preprocessing.sequence import pad_sequences
 from keras._tf_keras.keras.utils import to_categorical
 from keras._tf_keras.keras import models
+import tensorflow as tf
 
 
 import numpy as np
@@ -143,6 +144,23 @@ class keras_lstm:
     @staticmethod
     def load_model(file_path:os.path):
         return K.saving.load_model(filepath=file_path)
+    
+    @staticmethod
+    def predict_emotion(model:K.Model, sentence:str, stemmer:Any, stopwords:Any, vocab_size:int, max_len:int, encoder:LabelEncoder):
+        tqdm._instances.clear()
+        corpus=[]
+        sentence = re.sub("[^a-zA-Z]"," ", sentence)
+        sentence = sentence.lower()
+        sentence = sentence.split()
+        sentence = " ".join([stemmer.stem(word) for word in sentence if word not in stopwords])
+        corpus.append(sentence)
+        excoded_text = [one_hot(input_text=word, n=vocab_size) for word in corpus]
+        sequences = pad_sequences(sequences=excoded_text, maxlen=max_len, padding="pre")
+        #prediction = encoder.inverse_transform(np.argmax(model.predict(sequences), axis=1))[0]
+        prediction = np.argmax(model.predict(sequences), axis=1)[0]
+        probability = np.max(model.predict(sequences))*100
+        print (f"The sentiment is {prediction}, with probability of {probability}")
+        return prediction, probability
     
 if __name__=="__main__":
     __all__=["ml_classifier","keras_lstm"]
